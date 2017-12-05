@@ -9,6 +9,7 @@
     <Grid>
         <TextBox x:Name="CPU_temp" HorizontalAlignment="Left" Height="158" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="500"/>
         <TextBox x:Name="CPU_usage" HorizontalAlignment="Left" Height="158" Margin="10,192,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="500"/>
+        <ProgressBar x:Name="CPUTotal" HorizontalAlignment="Left" Height="10" Margin="145,229,0,0" VerticalAlignment="Top" Width="100"/>
 
     </Grid>
 </Window>

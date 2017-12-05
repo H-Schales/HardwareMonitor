@@ -16,6 +16,7 @@ using System.Management;
 using OpenHardwareMonitor.Collections;
 using OpenHardwareMonitor.Hardware;
 using System.Windows.Threading;
+using System.Diagnostics;
 
 namespace HardwareMonitor
 {
@@ -24,7 +25,9 @@ namespace HardwareMonitor
     /// </summary>
     public partial class MainWindow : Window
     {
+        PerformanceCounter perfCPU_TotalCounter = new PerformanceCounter("Prozessorinformationen", "Prozessorauslastung", "_Total");
         Computer thisComputer;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -40,6 +43,7 @@ namespace HardwareMonitor
         private void Timer_Tick(object sender, EventArgs e) {
             String temp = "";
             String usage = "";
+            float cpu_total = (int)perfCPU_TotalCounter.NextValue();
 
             foreach (var hardwareItem in thisComputer.Hardware) {
                 if (hardwareItem.HardwareType == HardwareType.CPU) {
@@ -60,6 +64,7 @@ namespace HardwareMonitor
 
             CPU_temp.Text = temp;
             CPU_usage.Text = usage;
+            CPUTotal.Value = cpu_total;
         }
     }
 }
