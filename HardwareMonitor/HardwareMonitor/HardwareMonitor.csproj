@@ -35,16 +35,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Aga.Controls">
-      <HintPath>..\..\..\clonedHardwareMonitor\External\Aga.Controls.dll</HintPath>
+      <HintPath>Z:\Developer\C#\HardwareMonitor\Librarys\Aga.Controls.dll</HintPath>
     </Reference>
     <Reference Include="OpenHardwareMonitorLib">
-      <HintPath>..\..\..\clonedHardwareMonitor\Bin\Debug\OpenHardwareMonitorLib.dll</HintPath>
+      <HintPath>Z:\Developer\C#\HardwareMonitor\Librarys\OpenHardwareMonitorLib.dll</HintPath>
     </Reference>
     <Reference Include="OxyPlot">
-      <HintPath>..\..\..\clonedHardwareMonitor\External\OxyPlot.dll</HintPath>
+      <HintPath>Z:\Developer\C#\HardwareMonitor\Librarys\OxyPlot.dll</HintPath>
     </Reference>
     <Reference Include="OxyPlot.WindowsForms">
-      <HintPath>..\..\..\clonedHardwareMonitor\External\OxyPlot.WindowsForms.dll</HintPath>
+      <HintPath>Z:\Developer\C#\HardwareMonitor\Librarys\OxyPlot.WindowsForms.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -60,6 +60,12 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="ZedGraph">
+      <HintPath>Z:\Developer\C#\HardwareMonitor\Librarys\zedgraph_dll_v5.1.5\ZedGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="ZedGraph.Web">
+      <HintPath>Z:\Developer\C#\HardwareMonitor\Librarys\zedgraph_dll_v5.1.5\ZedGraph.Web.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
