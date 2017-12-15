@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hw Monitor", "Hw Monitor\Hw Monitor.csproj", "{E9BA3B80-8DD3-4A57-BC89-F59C98F22C2D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareMonitor", "Hw Monitor\HardwareMonitor.csproj", "{E9BA3B80-8DD3-4A57-BC89-F59C98F22C2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +18,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F187023-FC30-4FA6-A803-8B664F97F516}
 	EndGlobalSection
 EndGlobal
