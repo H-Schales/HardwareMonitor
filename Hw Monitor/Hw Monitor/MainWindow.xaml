@@ -20,15 +20,13 @@
         <Grid x:Name="Grid_Button" Width="250" Height="450" Margin="0,80,0,20" HorizontalAlignment="Left" VerticalAlignment="Top" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-
             </Grid.ColumnDefinitions>
+            
             <Grid.RowDefinitions>
                 <RowDefinition Height="100" />
                 <RowDefinition Height="100" />
                 <RowDefinition Height="100" />
-
             </Grid.RowDefinitions>
-
 
             <Button x:Name="Button_cpu" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Background="White" Margin="0,20,0,0" VerticalContentAlignment="Bottom" Tag="Cpu" Content="CPU" Width="150" Height="80" Click="button_click"/>
             <Button x:Name="button_ram" VerticalContentAlignment="Bottom" Grid.Column="0" Grid.Row="1" Background="White" Margin="0,20,0,0" Tag="Ram" Content="Arbeitsspeicher" HorizontalAlignment="Left" Width="150" Height="80" Click="button_click"/>
@@ -46,11 +44,11 @@
                 <zed:ZedGraphControl x:Name="zedgraph_diskMini" Width="30" Height="30" />
             </WindowsFormsHost>
         </Grid>
-        <TextBox x:Name="textBox_cpuInfo" Visibility="Visible" HorizontalAlignment="Right" Height="200" Margin="0,0,20,20"  TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" Width="500"/>
-        <TextBox x:Name="textBox_ramInfo" Visibility="Hidden" HorizontalAlignment="Right" Height="200" Margin="0,0,20,20" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" Width="500"/>
-        <TextBox x:Name="textBox_diskInfo" Visibility="Hidden" HorizontalAlignment="Right" Height="200" Margin="0,0,20,20" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" Width="500"/>
+        <TextBox x:Name="textBox_cpuInfo" Visibility="Visible" BorderThickness="0.0" HorizontalAlignment="Right" Height="200" Margin="0,0,20,20"  TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" Width="500"/>
+        <TextBox x:Name="textBox_ramInfo" Visibility="Hidden"  BorderThickness="0.0" HorizontalAlignment="Right" Height="200" Margin="0,0,20,20" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" Width="500"/>
+        <TextBox x:Name="textBox_diskInfo" Visibility="Hidden" BorderThickness="0.0" HorizontalAlignment="Right" Height="200" Margin="0,0,20,20" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" Width="500"/>
 
-        <WindowsFormsHost x:Name="Zed_cpu" Visibility="Hidden" HorizontalAlignment="Right" Height="300" Margin="0,20,20,0" VerticalAlignment="Top" Width="500">
+        <WindowsFormsHost x:Name="Zed_cpu" Visibility="Visible" HorizontalAlignment="Right" Height="300" Margin="0,20,20,0" VerticalAlignment="Top" Width="500">
             <!-- das ist das Control ZedGraph (dll) zu den Referenzen dazunehmen -->
             <zed:ZedGraphControl x:Name="zedgraph_cpu" Width="500" Height="200" />
 
@@ -63,14 +61,7 @@
         <WindowsFormsHost x:Name="Zed_disk" Visibility="Hidden" HorizontalAlignment="Right" Height="300" Margin="0,20,20,0" VerticalAlignment="Top" Width="500">
             <zed:ZedGraphControl x:Name="zedgraph_disk" Width="500" Height="200" />
         </WindowsFormsHost>
-
-        <WindowsFormsHost x:Name="Zed" Visibility="Visible" HorizontalAlignment="Right" Height="300" Margin="0,20,20,0" VerticalAlignment="Top" Width="500">
-            <!-- das ist das Control ZedGraph (dll) zu den Referenzen dazunehmen -->
-            <zed:ZedGraphControl x:Name="zedgraph" Width="500" Height="200" />
-        </WindowsFormsHost>
-
-
-
+        
     </Grid>
 
 

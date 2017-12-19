@@ -23,9 +23,9 @@ namespace Hw_Monitor
     public partial class MainWindow : Window
     {
         Computer thisComputer = new Computer();
-
         DispatcherTimer timer = new DispatcherTimer();
 
+        //PointPairList for ZedGraph
         PointPairList cpuLoadList = new PointPairList();
         PointPairList ramUsageList = new PointPairList();
         PointPairList diskUsageList = new PointPairList();
@@ -51,20 +51,23 @@ namespace Hw_Monitor
             thisComputer.Open();
 
             //zedGraph cpuLoad
+            zedgraph_cpu.GraphPane.Title.Text = "Prozessor";
             zedgraph_cpu.GraphPane.XAxis.Title.Text = "Zeit";
             zedgraph_cpu.GraphPane.YAxis.Title.Text = "Auslastung in %";
             zedgraph_cpu.GraphPane.CurveList.Clear();
             cpuLoadList.Clear();
 
             //zedGraph ramUsage
+            zedgraph_ram.GraphPane.Title.Text = "Arbeitsspeicher";
             zedgraph_ram.GraphPane.XAxis.Title.Text = "Zeit";
-            zedgraph_ram.GraphPane.YAxis.Title.Text = "Durchsatz";
+            zedgraph_ram.GraphPane.YAxis.Title.Text = "Arbeitsspeicherverbrauch in MB";
             zedgraph_ram.GraphPane.CurveList.Clear();
             ramUsageList.Clear();
 
             //zedGraph diskUsage
+            zedgraph_disk.GraphPane.Title.Text = "Festplatte";
             zedgraph_disk.GraphPane.XAxis.Title.Text = "Zeit";
-            zedgraph_disk.GraphPane.YAxis.Title.Text = "Durchsatz";
+            zedgraph_disk.GraphPane.YAxis.Title.Text = "Was wird hier überhaupt angezeigt Sebastian ? ";
             zedgraph_disk.GraphPane.CurveList.Clear();
             diskUsageList.Clear();
         }
@@ -73,39 +76,26 @@ namespace Hw_Monitor
         {
             Button btn = (Button)sender;
             String chosen = btn.Tag.ToString();
+
+            everythingHidden();
+
             if (chosen == "Cpu")
             {
-
-                textBox_ramInfo.Visibility = Visibility.Hidden;
-                textBox_diskInfo.Visibility = Visibility.Hidden;
                 textBox_cpuInfo.Visibility = Visibility.Visible;
                 Zed_cpu.Visibility = Visibility.Visible;
-                Zed_ram.Visibility = Visibility.Hidden;
-                Zed.Visibility = Visibility.Hidden;
-                Zed_disk.Visibility = Visibility.Hidden;
-
             }
-            if (chosen == "Ram")
+            else if (chosen == "Ram")
             {
-                textBox_cpuInfo.Visibility = Visibility.Hidden;
-                textBox_diskInfo.Visibility = Visibility.Hidden;
                 textBox_ramInfo.Visibility = Visibility.Visible;
                 Zed_ram.Visibility = Visibility.Visible;
-                Zed_cpu.Visibility = Visibility.Hidden;
-                Zed.Visibility = Visibility.Hidden;
-                Zed_disk.Visibility = Visibility.Hidden;
             }
-            if (chosen == "Disk")
+            else if (chosen == "Disk")
             {
-                textBox_ramInfo.Visibility = Visibility.Hidden;
-                textBox_cpuInfo.Visibility = Visibility.Hidden;
                 textBox_diskInfo.Visibility = Visibility.Visible;
-                Zed_cpu.Visibility = Visibility.Hidden;
-                Zed_ram.Visibility = Visibility.Hidden;
-                Zed.Visibility = Visibility.Hidden;
                 Zed_disk.Visibility = Visibility.Visible;
             }
         }
+
         public void timer_Tick(object sender, EventArgs e)
         {
             String cpuLoadString = "";
@@ -139,7 +129,8 @@ namespace Hw_Monitor
                             cpuLoadString += String.Format("{0} Load = {1}\r\n", sensor.Name, sensor.Value.HasValue ? sensor.Value.Value.ToString() : "no value");
                         }
                     }
-                } else if (hardwareItem.HardwareType == HardwareType.RAM) {
+                }
+                else if (hardwareItem.HardwareType == HardwareType.RAM) {
                     hardwareItem.Update();
                     foreach (IHardware subHardware in hardwareItem.SubHardware)
                         subHardware.Update();
@@ -176,26 +167,7 @@ namespace Hw_Monitor
             textBox_diskInfo.Text = hddUsageString;
 
             //clear graph every 60 seconds
-            if (x_time == 60)
-            {
-                //CPU
-                zedgraph_cpu.GraphPane.CurveList.Clear();
-                zedgraph_cpuMini.GraphPane.CurveList.Clear();
-                cpuLoadList.Clear();
-
-                //Ram
-                zedgraph_ram.GraphPane.CurveList.Clear();
-                zedgraph.GraphPane.CurveList.Clear();
-                zedgraph_ramMini.GraphPane.CurveList.Clear();
-                ramUsageList.Clear();
-
-                //Disk 
-                zedgraph_disk.GraphPane.CurveList.Clear();
-                zedgraph_diskMini.GraphPane.CurveList.Clear();
-                diskUsageList.Clear();
-
-                x_time = 0;
-            }
+            clearZed();
             x_time++;
 
             //X und Y Werte List übergeben
@@ -216,11 +188,6 @@ namespace Hw_Monitor
             zedgraph_disk.AxisChange();
             zedgraph_disk.Refresh();
 
-            LineItem myCurve = zedgraph.GraphPane.AddCurve("", cpuLoadList, System.Drawing.Color.Red, SymbolType.None);
-            LineItem myCurve2 = zedgraph.GraphPane.AddCurve("", ramUsageList, System.Drawing.Color.Blue, SymbolType.None);
-            zedgraph.AxisChange();
-            zedgraph.Refresh();
-
             LineItem myCurve_cpuMini = zedgraph_cpuMini.GraphPane.AddCurve("", cpuLoadList, System.Drawing.Color.Red, SymbolType.None);
             zedgraph_cpuMini.AxisChange();
             zedgraph_cpuMini.Refresh();
@@ -232,6 +199,39 @@ namespace Hw_Monitor
             LineItem myCurve_diskMini = zedgraph_diskMini.GraphPane.AddCurve("", diskUsageList, System.Drawing.Color.Green, SymbolType.None);
             zedgraph_diskMini.AxisChange();
             zedgraph_diskMini.Refresh();
+        }
+
+        public void everythingHidden() {
+            textBox_cpuInfo.Visibility = Visibility.Hidden;
+            textBox_ramInfo.Visibility = Visibility.Hidden;
+            textBox_diskInfo.Visibility = Visibility.Hidden;
+            Zed_cpu.Visibility = Visibility.Hidden;
+            Zed_ram.Visibility = Visibility.Hidden;
+            Zed_disk.Visibility = Visibility.Hidden;
+        }
+
+        public void clearZed() {
+
+            if (x_time == 60)
+            {
+                //CPU
+                zedgraph_cpu.GraphPane.CurveList.Clear();
+                zedgraph_cpuMini.GraphPane.CurveList.Clear();
+                cpuLoadList.Clear();
+
+                //Ram
+                zedgraph_ram.GraphPane.CurveList.Clear();
+                zedgraph_ramMini.GraphPane.CurveList.Clear();
+                ramUsageList.Clear();
+
+                //Disk 
+                zedgraph_disk.GraphPane.CurveList.Clear();
+                zedgraph_diskMini.GraphPane.CurveList.Clear();
+                diskUsageList.Clear();
+
+                x_time = 0;
+            }
+            x_time++;
         }
     }
 }
