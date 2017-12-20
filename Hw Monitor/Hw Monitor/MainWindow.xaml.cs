@@ -211,7 +211,6 @@ namespace Hw_Monitor
         }
 
         public void clearZed() {
-
             if (x_time == 60)
             {
                 //CPU
