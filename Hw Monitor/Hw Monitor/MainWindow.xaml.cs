@@ -103,25 +103,23 @@ namespace Hw_Monitor
             String ramUsageString = "";
             String hddUsageString = "";
             String usage = "";
+            String cpuName = "";
 
             foreach (var hardwareItem in thisComputer.Hardware)
             {
                 if (hardwareItem.HardwareType == HardwareType.CPU)
                 {
                     hardwareItem.Update();
+                    cpuName = hardwareItem.Name;
                     foreach (IHardware subHardware in hardwareItem.SubHardware)
                         subHardware.Update();
-
-                    foreach (var sensor in hardwareItem.Sensors)
-                    {
+                        foreach (var sensor in hardwareItem.Sensors)
+                        {
                         if (sensor.SensorType == SensorType.Temperature)
                         {
                             cpuTemperature = (int)sensor.Value.Value;
                             usage += String.Format("{0} Temperature = {1} °C\r\n", sensor.Name, sensor.Value.HasValue ? sensor.Value.Value.ToString() : "no value");
-                            if (cpuTemperature >= 65)
-                            {
-                                Button_cpu.Background = Brushes.IndianRed;
-                            }
+                            checkCpuTemp(cpuTemperature);
                         }
 
                         if (sensor.SensorType == SensorType.Load)
@@ -163,7 +161,7 @@ namespace Hw_Monitor
             }
 
             //Hardware Informationen
-            textBox_cpuInfo.Text = cpuLoadString + "\n" + usage;
+            textBox_cpuInfo.Text = cpuName + "\n" + cpuLoadString + "\n" + usage;
             textBox_ramInfo.Text = ramUsageString;
             textBox_diskInfo.Text = hddUsageString;
 
@@ -231,6 +229,18 @@ namespace Hw_Monitor
                 x_time = 0;
             }
             x_time++;
+        }
+
+        public void checkCpuTemp(int cpuTemp)
+        {
+            if (cpuTemp >= 65)
+            {
+                Button_cpu.Background = Brushes.IndianRed;
+            }
+            else
+            {
+                Button_cpu.Background = Brushes.White;
+            }
         }
     }
 }
