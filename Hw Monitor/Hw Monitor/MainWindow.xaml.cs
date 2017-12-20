@@ -169,7 +169,6 @@ namespace Hw_Monitor
 
             //clear graph every 60 seconds
             clearZed();
-            x_time++;
 
             //X und Y Werte List übergeben
             cpuLoadList.Add(x_time, cpuLoad);
