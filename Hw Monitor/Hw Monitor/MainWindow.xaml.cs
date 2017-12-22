@@ -49,6 +49,7 @@ namespace Hw_Monitor
             thisComputer.CPUEnabled = true;
             thisComputer.RAMEnabled = true;
             thisComputer.HDDEnabled = true;
+            thisComputer.GPUEnabled = true;
             thisComputer.Open();
 
             //zedGraph cpuLoad
