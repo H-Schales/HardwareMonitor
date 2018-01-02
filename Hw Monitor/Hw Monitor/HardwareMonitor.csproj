@@ -53,6 +53,10 @@
     <Reference Include="OxyPlot.WindowsForms">
       <HintPath>..\Librays\OxyPlot.WindowsForms.dll</HintPath>
     </Reference>
+    <Reference Include="PerformanceCounterHelper.Installer, Version=1.3.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PerformanceCounterHelper.Installer.1.3.0.2\lib\net40\PerformanceCounterHelper.Installer.exe</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -75,9 +79,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Librays\zedgraph_dll_v5.1.5\ZedGraph.dll</HintPath>
     </Reference>
+    <Reference Include="ZedGraph.resources">
+      <HintPath>..\Librays\zedgraph_dll_v5.1.5\de\ZedGraph.resources.dll</HintPath>
+    </Reference>
     <Reference Include="ZedGraph.Web, Version=5.1.5.29221, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Librays\zedgraph_dll_v5.1.5\ZedGraph.Web.dll</HintPath>
+      <HintPath>..\..\..\ZedGraphTest\zedgraph_dll_v5.1.5\ZedGraph.Web.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

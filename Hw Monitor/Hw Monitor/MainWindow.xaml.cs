@@ -30,8 +30,9 @@ namespace Hw_Monitor
         PointPairList ramUsageList = new PointPairList();
         PointPairList diskUsageList = new PointPairList();
 
-        double tmp_ram = 0.0, tmp_disk = 0.0, tmp_cpuLoad = 0.0;
-        int tmp_cpuTemp = 0, x_time = 0;
+        //Werte der Hardware Komponenten um den Zed Graph zeichnen zu können
+        double ramUsage = 0.0, diskUsage = 0.0, cpuLoad = 0.0;
+        int cpuTemperature = 0, x_time = 0;
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
@@ -48,6 +49,7 @@ namespace Hw_Monitor
             thisComputer.CPUEnabled = true;
             thisComputer.RAMEnabled = true;
             thisComputer.HDDEnabled = true;
+            thisComputer.GPUEnabled = true;
             thisComputer.Open();
 
             //zedGraph cpuLoad
@@ -102,30 +104,28 @@ namespace Hw_Monitor
             String ramUsageString = "";
             String hddUsageString = "";
             String usage = "";
+            String cpuName = "";
 
             foreach (var hardwareItem in thisComputer.Hardware)
             {
                 if (hardwareItem.HardwareType == HardwareType.CPU)
                 {
                     hardwareItem.Update();
+                    cpuName = hardwareItem.Name;
                     foreach (IHardware subHardware in hardwareItem.SubHardware)
                         subHardware.Update();
-
-                    foreach (var sensor in hardwareItem.Sensors)
-                    {
+                        foreach (var sensor in hardwareItem.Sensors)
+                        {
                         if (sensor.SensorType == SensorType.Temperature)
                         {
-                            tmp_cpuTemp = (int)sensor.Value.Value;
+                            cpuTemperature = (int)sensor.Value.Value;
                             usage += String.Format("{0} Temperature = {1} °C\r\n", sensor.Name, sensor.Value.HasValue ? sensor.Value.Value.ToString() : "no value");
-                            if (tmp_cpuTemp >= 65)
-                            {
-                                Button_cpu.Background = Brushes.IndianRed;
-                            }
+                            checkCpuTemp(cpuTemperature);
                         }
 
                         if (sensor.SensorType == SensorType.Load)
                         {
-                            tmp_cpuLoad = (double)sensor.Value.Value;
+                            cpuLoad = (double)sensor.Value.Value;
                             cpuLoadString += String.Format("{0} Load = {1}\r\n", sensor.Name, sensor.Value.HasValue ? sensor.Value.Value.ToString() : "no value");
                         }
                     }
@@ -139,7 +139,7 @@ namespace Hw_Monitor
                     {    
                         if (sensor.SensorType == SensorType.Data)
                         {
-                            tmp_ram = (double)sensor.Value.Value;
+                            ramUsage = (double)sensor.Value.Value;
                             ramUsageString += String.Format("{0} Ram = {1}\r\n", sensor.Name, sensor.Value.HasValue ? sensor.Value.Value.ToString() : "no value");
                         }
                     }
@@ -154,7 +154,7 @@ namespace Hw_Monitor
                     {
                         if (sensor.SensorType == SensorType.Load)
                         {
-                            tmp_disk = (double)sensor.Value.Value;
+                            diskUsage = (double)sensor.Value.Value;
                             hddUsageString += String.Format("{0} HDD = {1}\r\n", sensor.Name, sensor.Value.HasValue ? sensor.Value.Value.ToString() : "no value");
                         }
                     }
@@ -162,18 +162,17 @@ namespace Hw_Monitor
             }
 
             //Hardware Informationen
-            textBox_cpuInfo.Text = cpuLoadString + "\n" + usage;
+            textBox_cpuInfo.Text = cpuName + "\n" + cpuLoadString + "\n" + usage;
             textBox_ramInfo.Text = ramUsageString;
             textBox_diskInfo.Text = hddUsageString;
 
             //clear graph every 60 seconds
             clearZed();
-            x_time++;
 
             //X und Y Werte List übergeben
-            cpuLoadList.Add(x_time, tmp_cpuLoad);
-            ramUsageList.Add(x_time, tmp_ram);
-            diskUsageList.Add(x_time, tmp_disk);
+            cpuLoadList.Add(x_time, cpuLoad);
+            ramUsageList.Add(x_time, ramUsage);
+            diskUsageList.Add(x_time, diskUsage);
 
             //Graph zeichnen
             LineItem myCurve_cpu = zedgraph_cpu.GraphPane.AddCurve("", cpuLoadList, System.Drawing.Color.Red, SymbolType.None);
@@ -211,7 +210,6 @@ namespace Hw_Monitor
         }
 
         public void clearZed() {
-
             if (x_time == 60)
             {
                 //CPU
@@ -232,6 +230,18 @@ namespace Hw_Monitor
                 x_time = 0;
             }
             x_time++;
+        }
+
+        public void checkCpuTemp(int cpuTemp)
+        {
+            if (cpuTemp >= 65)
+            {
+                Button_cpu.Background = Brushes.IndianRed;
+            }
+            else
+            {
+                Button_cpu.Background = Brushes.White;
+            }
         }
     }
 }

@@ -31,7 +31,6 @@
             <Button x:Name="Button_cpu" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Background="White" Margin="0,20,0,0" VerticalContentAlignment="Bottom" Tag="Cpu" Content="CPU" Width="150" Height="80" Click="button_click"/>
             <Button x:Name="button_ram" VerticalContentAlignment="Bottom" Grid.Column="0" Grid.Row="1" Background="White" Margin="0,20,0,0" Tag="Ram" Content="Arbeitsspeicher" HorizontalAlignment="Left" Width="150" Height="80" Click="button_click"/>
             <Button x:Name="button_disk" Grid.Column="0" Grid.Row="2" VerticalContentAlignment="Bottom" Background="White" Margin="0,20,0,0" Tag="Disk" Content="Datenträger" HorizontalAlignment="Left" Width="150" Height="80" Click="button_click"/>
-
             <WindowsFormsHost HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" x:Name="Zed_cpuMini" Height="60" Width="100">
                 <zed:ZedGraphControl x:Name="zedgraph_cpuMini" Width="30" Height="30" />
             </WindowsFormsHost>
@@ -47,7 +46,6 @@
         <TextBox x:Name="textBox_cpuInfo" Visibility="Visible" BorderThickness="0.0" HorizontalAlignment="Right" Height="200" Margin="0,0,20,20"  TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" Width="500"/>
         <TextBox x:Name="textBox_ramInfo" Visibility="Hidden"  BorderThickness="0.0" HorizontalAlignment="Right" Height="200" Margin="0,0,20,20" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" Width="500"/>
         <TextBox x:Name="textBox_diskInfo" Visibility="Hidden" BorderThickness="0.0" HorizontalAlignment="Right" Height="200" Margin="0,0,20,20" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" Width="500"/>
-
         <WindowsFormsHost x:Name="Zed_cpu" Visibility="Visible" HorizontalAlignment="Right" Height="300" Margin="0,20,20,0" VerticalAlignment="Top" Width="500">
             <!-- das ist das Control ZedGraph (dll) zu den Referenzen dazunehmen -->
             <zed:ZedGraphControl x:Name="zedgraph_cpu" Width="500" Height="200" />
