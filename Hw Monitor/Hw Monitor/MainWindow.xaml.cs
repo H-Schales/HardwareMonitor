@@ -133,6 +133,7 @@ namespace Hw_Monitor
             String userName = "";
             String computerName = "";
             String string_Network = "";
+            String networkType = "";
 
             //Benutzername und Computernamen ermitteln
             userName = Environment.UserName;
@@ -223,12 +224,14 @@ namespace Hw_Monitor
                     string_Network = networkItem.Description.ToString();
                     string_MacAddress = networkItem.GetPhysicalAddress().ToString();
                     string_NetworkStatus = networkItem.OperationalStatus.ToString();
+                    networkType = networkItem.Name;
 
-                    if (string_NetworkStatus == "Down")
+                    if (networkType != "WLAN")
                     {
                         string_NetworkStatus = "";
                         string_Network = "";
                         string_MacAddress = "";
+                        networkType = "";
                     }
                     else
                     {
