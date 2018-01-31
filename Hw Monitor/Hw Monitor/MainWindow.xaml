@@ -23,40 +23,40 @@
                 <RowDefinition Height="100" />
             </Grid.RowDefinitions>
 
-            <Button x:Name="Button_cpu" BorderThickness="1" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Foreground="Blue" Background="White" Margin="0,20,0,0" VerticalContentAlignment="Bottom" Tag="Cpu" Content="CPU" Width="150" Height="80" Click="button_click" Cursor="Hand" ToolTip="Prozessorinformationen">
+            <Button x:Name="Button_cpu" BorderThickness="1" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Foreground="Blue" Background="White" Margin="5,20,0,0" VerticalContentAlignment="Bottom" Tag="Cpu" Content="CPU" Width="150" Height="80" Click="button_click" Cursor="Hand" ToolTip="Prozessorinformationen">
                 <Button.Effect>
                     <DropShadowEffect Color="#FFF9ECEC"/>
                 </Button.Effect>
             </Button>
-            <Button x:Name="button_ram" BorderThickness="1" VerticalContentAlignment="Bottom" Grid.Column="0" Grid.Row="1" Foreground="DarkRed" Background="White" Margin="0,20,0,0" Tag="Ram" Content="Arbeitsspeicher" HorizontalAlignment="Left" Width="150" Height="80" Click="button_click" Cursor="Hand" ToolTip="Arbeitsspeicherinformationen">
+            <Button x:Name="button_ram" BorderThickness="1" VerticalContentAlignment="Bottom" Grid.Column="0" Grid.Row="1" Foreground="DarkRed" Background="White" Margin="5,20,0,0" Tag="Ram" Content="Arbeitsspeicher" HorizontalAlignment="Left" Width="150" Height="80" Click="button_click" Cursor="Hand" ToolTip="Arbeitsspeicherinformationen">
                 <Button.Effect>
                     <DropShadowEffect Color="#FFF9ECEC"/>
                 </Button.Effect>
             </Button>
-            <Button x:Name="button_disk" BorderThickness="1" Grid.Column="0" Grid.Row="2" VerticalContentAlignment="Bottom" Foreground="Green" Background="White" Margin="0,20,0,0" Tag="Disk" Content="Datenträger" HorizontalAlignment="Left" Width="150" Height="80" Click="button_click" Cursor="Hand" ToolTip="Datenträgerinformationen">
+            <Button x:Name="button_disk" BorderThickness="1" Grid.Column="0" Grid.Row="2" VerticalContentAlignment="Bottom" Foreground="Green" Background="White" Margin="5,20,0,0" Tag="Disk" Content="Datenträger" HorizontalAlignment="Left" Width="150" Height="80" Click="button_click" Cursor="Hand" ToolTip="Datenträgerinformationen">
                 <Button.Effect>
                     <DropShadowEffect Color="#FFF9ECEC"/>
                 </Button.Effect>
             </Button>
-            <Button x:Name="button_network" BorderThickness="1" Grid.Column="0" Grid.Row="3" VerticalContentAlignment="Bottom" Foreground="DarkOrange" Background="White" Margin="0,20,0,0" Tag="Network" Content="Netzwerk" HorizontalAlignment="Left" Width="150" Height="80" Click="button_click" Cursor="Hand"  ToolTip="Netzwerkinformationen">
+            <Button x:Name="button_network" BorderThickness="1" Grid.Column="0" Grid.Row="3" VerticalContentAlignment="Bottom" Foreground="DarkOrange" Background="White" Margin="5,20,0,0" Tag="Network" Content="Netzwerk" HorizontalAlignment="Left" Width="150" Height="80" Click="button_click" Cursor="Hand"  ToolTip="Netzwerkinformationen">
                 <Button.Effect>
                     <DropShadowEffect Color="#FFF9ECEC"/>
                 </Button.Effect>
             </Button>
             
-            <WindowsFormsHost HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" x:Name="Zed_cpuMini" Height="60" Width="100">
+            <WindowsFormsHost HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" x:Name="Zed_cpuMini" Height="60" Width="100" Margin="5, 0, 0, 0">
                 <zed:ZedGraphControl x:Name="zedgraph_cpuMini" Width="30" Height="30" />
             </WindowsFormsHost>
 
-            <WindowsFormsHost x:Name="Zed_ramMini" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="1" Height="60" Width="100">
+            <WindowsFormsHost x:Name="Zed_ramMini" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="1" Height="60" Width="100" Margin="5, 0, 0, 0">
                 <zed:ZedGraphControl x:Name="zedgraph_ramMini" Width="30" Height="30" />
             </WindowsFormsHost>
 
-            <WindowsFormsHost x:Name="Zed_diskMini" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="2" Height="60" Width="100">
+            <WindowsFormsHost x:Name="Zed_diskMini" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="2" Height="60" Width="100" Margin="5, 0, 0, 0">
                 <zed:ZedGraphControl x:Name="zedgraph_diskMini" Width="30" Height="30" />
             </WindowsFormsHost>
 
-            <WindowsFormsHost x:Name="Zed_networkMini" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="3" Height="60" Width="100">
+            <WindowsFormsHost x:Name="Zed_networkMini" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="3" Height="60" Width="100" Margin="5, 0, 0, 0">
                 <zed:ZedGraphControl x:Name="zedgraph_networkMini" Width="30" Height="30" />
             </WindowsFormsHost>
             
