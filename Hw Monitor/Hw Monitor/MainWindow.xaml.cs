@@ -34,8 +34,7 @@ namespace Hw_Monitor
         PointPairList networkList = new PointPairList();
 
         //PerformanceCounter Netzwerkverkehr
-        PerformanceCounter network = new PerformanceCounter();
-        PerformanceCounter networkReceive = new PerformanceCounter();
+        PerformanceCounter network = new PerformanceCounter();      
         PerformanceCounter networkSent = new PerformanceCounter();
 
         ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT totalphysicalmemory FROM Win32_ComputerSystem");
@@ -46,7 +45,7 @@ namespace Hw_Monitor
 
         //Hardware Informationen
         double totalMemory = 0;
-        int cpuTemperature = 0, diskTemperature = 0, networkDataReceive = 0, networkDataSent = 0;
+        int cpuTemperature = 0, diskTemperature = 0, networkDataSent = 0;
 
 
         public MainWindow()
@@ -245,11 +244,6 @@ namespace Hw_Monitor
                 network.InstanceName = string_Network;
                 network_Data = (int)network.NextValue();
 
-                networkReceive.CategoryName = "Netzwerkschnittstelle";
-                networkReceive.CounterName = "Empfangene Bytes/s";
-                networkReceive.InstanceName = string_Network;
-                networkDataReceive += (int)networkReceive.NextValue();
-
                 networkSent.CategoryName = "Netzwerkschnittstelle";
                 networkSent.CounterName = "Bytes gesendet/s";
                 networkSent.InstanceName = string_Network;
@@ -269,8 +263,7 @@ namespace Hw_Monitor
                                     hddUsageString +
                                     "Temperatur:\t\t" + diskTemperature +"°C";
             textBox_networkInfo.Text = "Netzwerkarte:" + "\t\t" + string_Network + "\n" +
-                                       "Gesamtanzahl Daten:" + "\t" + network_Data.ToString() + " Bytes/s\n" +
-                                       "Empfangene Daten:" + "\t" + networkDataReceive.ToString() + " Bytes/s\n" +
+                                       "Gesamtanzahl Daten:" + "\t" + network_Data.ToString() + " Bytes/s\n" +                                     
                                        "Gesendete Daten:" + "\t\t" + networkDataSent.ToString() + " Bytes/s\n" + 
                                        "Netzwerkstatus:" + "\t\t" + string_NetworkStatus + "\n" +
                                        "Mac-Adresse" + "\t\t" + string_MacAddress;

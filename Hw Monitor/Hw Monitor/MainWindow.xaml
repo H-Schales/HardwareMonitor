@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Hw_Monitor"
         xmlns:zed="clr-namespace:ZedGraph;assembly=ZedGraph"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800" Background="#FF3A3333">
+        Title="Hardware Monitor" Height="600" Width="800" Background="#FF3A3333">
     <Grid Width="auto" Height="auto">
 
         <Label x:Name="LabelInfo" Content="" Foreground="White" HorizontalAlignment="Left" Margin="5,10,0,0" VerticalAlignment="Top"/>
