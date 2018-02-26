@@ -20,6 +20,8 @@ using ZedGraph;
 using System.Management;
 using System.Globalization;
 using System.Net;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace Hw_Monitor
 {
@@ -387,6 +389,11 @@ namespace Hw_Monitor
                 networkList.Clear();
 
                 x_time = 0;
+
+                //Nach 60 sekunden werden die Daten in eine Xml Datei exportiert 
+                DateTime datetime = DateTime.Now;
+                String information = "\nDatum: " + datetime.ToString() + "\n\n" + textBox_cpuInfo.Text + "\n" + textBox_ramInfo.Text + "\n" + textBox_diskInfo.Text + "\n" + textBox_networkInfo.Text;
+                saveXml(information, "Information.xml");
             }
             x_time++;
         }
@@ -407,6 +414,14 @@ namespace Hw_Monitor
         public bool IsIP(string IP)
         {
             return System.Text.RegularExpressions.Regex.IsMatch(IP, @"\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$\b");
+        }
+
+        public void saveXml(string text, string filename)
+        {
+            XmlSerializer sr = new XmlSerializer(text.GetType());
+            TextWriter writer = new StreamWriter(filename);
+            sr.Serialize(writer, text);
+            writer.Close();
         }
     }
 }
