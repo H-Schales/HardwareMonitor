@@ -25,20 +25,20 @@ namespace Hw_Monitor
 {
     public partial class MainWindow : Window
     {
-        Computer thisComputer = new Computer();
-        DispatcherTimer timer = new DispatcherTimer();
-        CultureInfo ci = CultureInfo.CurrentCulture;
+        Computer thisComputer             = new Computer();
+        DispatcherTimer timer             = new DispatcherTimer();
+        CultureInfo ci                    = CultureInfo.CurrentCulture;
         ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT totalphysicalmemory FROM Win32_ComputerSystem");
-        IPHostEntry Host = Dns.GetHostEntry(Dns.GetHostName());
+        IPHostEntry Host                  = Dns.GetHostEntry(Dns.GetHostName());
 
         //PointPairList for ZedGraph
-        PointPairList cpuLoadList = new PointPairList();
-        PointPairList ramUsageList = new PointPairList();
+        PointPairList cpuLoadList   = new PointPairList();
+        PointPairList ramUsageList  = new PointPairList();
         PointPairList diskUsageList = new PointPairList();
-        PointPairList networkList = new PointPairList();
+        PointPairList networkList   = new PointPairList();
 
         //PerformanceCounter Netzwerkverkehr
-        PerformanceCounter network = new PerformanceCounter();      
+        PerformanceCounter network     = new PerformanceCounter();      
         PerformanceCounter networkSent = new PerformanceCounter();
 
         //Werte der Hardware Komponenten um den Zed Graph zeichnen zu können
@@ -50,15 +50,15 @@ namespace Hw_Monitor
         double totalMemory = 0;
         int cpuTemperature = 0, diskTemperature = 0, networkDataSent = 0;
 
-        String language = "";
-        String userName = "";
+        String language     = "";
+        String userName     = "";
         String computerName = "";
 
         public MainWindow()
         {
             InitializeComponent();
             timer.Interval = new TimeSpan(0, 0, 1);
-            timer.Tick += timer_Tick;
+            timer.Tick    += timer_Tick;
             timer.Start();
 
             thisComputer.CPUEnabled = true;
@@ -68,35 +68,35 @@ namespace Hw_Monitor
             thisComputer.Open();
 
             //zedGraph cpuLoad
-            zedgraph_cpu.GraphPane.Title.Text = "Prozessor";
+            zedgraph_cpu.GraphPane.Title.Text       = "Prozessor";
             zedgraph_cpu.GraphPane.XAxis.Title.Text = "Zeit";
             zedgraph_cpu.GraphPane.YAxis.Title.Text = "Auslastung in %";
             zedgraph_cpu.GraphPane.CurveList.Clear();
             cpuLoadList.Clear();
 
             //zedGraph ramUsage
-            zedgraph_ram.GraphPane.Title.Text = "Arbeitsspeicher";
+            zedgraph_ram.GraphPane.Title.Text       = "Arbeitsspeicher";
             zedgraph_ram.GraphPane.XAxis.Title.Text = "Zeit";
             zedgraph_ram.GraphPane.YAxis.Title.Text = "verwendeter Arbeitsspeicher in %";
             zedgraph_ram.GraphPane.CurveList.Clear();
             ramUsageList.Clear();
 
             //zedGraph diskUsage
-            zedgraph_disk.GraphPane.Title.Text = "Festplatte";
+            zedgraph_disk.GraphPane.Title.Text       = "Festplatte";
             zedgraph_disk.GraphPane.XAxis.Title.Text = "Zeit";
             zedgraph_disk.GraphPane.YAxis.Title.Text = "verwendeter Speicher";
             zedgraph_disk.GraphPane.CurveList.Clear();
             diskUsageList.Clear();
 
             //ZedGraph NetworkTraffic
-            zedgraph_network.GraphPane.Title.Text = "Netzwerkverkehr";
+            zedgraph_network.GraphPane.Title.Text       = "Netzwerkverkehr";
             zedgraph_network.GraphPane.XAxis.Title.Text = "Zeit";
             zedgraph_network.GraphPane.YAxis.Title.Text = "Gesamtanzahl Bytes/s";
             zedgraph_network.GraphPane.CurveList.Clear();
             networkList.Clear();
 
             //Benutzername, Computername und Systemsprache ermitteln
-            userName = Environment.UserName;
+            userName     = Environment.UserName;
             computerName = Environment.MachineName;
             language = ci.Name;
 
@@ -113,7 +113,7 @@ namespace Hw_Monitor
 
         private void button_click(object sender, RoutedEventArgs e)
         {
-            Button btn = (Button)sender;
+            Button btn    = (Button)sender;
             String chosen = btn.Tag.ToString();
 
             everythingHidden();
@@ -121,38 +121,38 @@ namespace Hw_Monitor
             if (chosen == "Cpu")
             {
                 textBox_cpuInfo.Visibility = Visibility.Visible;
-                Zed_cpu.Visibility = Visibility.Visible;
+                Zed_cpu.Visibility         = Visibility.Visible;
             }
             else if (chosen == "Ram")
             {
                 textBox_ramInfo.Visibility = Visibility.Visible;
-                Zed_ram.Visibility = Visibility.Visible;
+                Zed_ram.Visibility         = Visibility.Visible;
             }
             else if (chosen == "Disk")
             {
                 textBox_diskInfo.Visibility = Visibility.Visible;
-                Zed_disk.Visibility = Visibility.Visible;
+                Zed_disk.Visibility         = Visibility.Visible;
             }
             else if (chosen == "Network")
             {
                 textBox_networkInfo.Visibility = Visibility.Visible;
-                Zed_network.Visibility = Visibility.Visible;
+                Zed_network.Visibility         = Visibility.Visible;
             }
         }
 
         public void timer_Tick(object sender, EventArgs e)
         {
-            String cpuLoadString = "";
-            String ramUsageString = "";
-            String hddUsageString = "";
-            String cpuTempString = "";
-            String cpuName = "";
-            String diskInfoString = "";
+            String cpuLoadString        = "";
+            String ramUsageString       = "";
+            String hddUsageString       = "";
+            String cpuTempString        = "";
+            String cpuName              = "";
+            String diskInfoString       = "";
             String string_NetworkStatus = "";
-            String string_MacAddress = "";
-            String string_Network = "";
-            String networkType = "";
-            String IPAddress = "";
+            String string_MacAddress    = "";
+            String string_Network       = "";
+            String networkType          = "";
+            String IPAddress            = "";
 
             //HardwareInformationen auslesen
             foreach (var hardwareItem in thisComputer.Hardware)
@@ -238,23 +238,25 @@ namespace Hw_Monitor
 
                     foreach (var networkItem in NetworkInterface.GetAllNetworkInterfaces())
                     {
-                        string_Network = networkItem.Description.ToString();
-                        string_MacAddress = networkItem.GetPhysicalAddress().ToString();
+                        string_Network       = networkItem.Description.ToString();
+                        string_MacAddress    = networkItem.GetPhysicalAddress().ToString();
                         string_NetworkStatus = networkItem.OperationalStatus.ToString();
-                        networkType = networkItem.Name;
+                        networkType          = networkItem.Name;
                         roundingNetworkCard++;
 
-                    if (roundingNetworkCard != roundingIP)
+                    
+
+                    if (networkType == "WLAN" && string_NetworkStatus == "Up" || networkType == "Ethernet" && string_NetworkStatus == "Up")
+                    {
+                        string_Network = string_Network.Replace("(", "[").Replace(")", "]");
+                        break;
+                    }
+                    else
                     {
                         string_NetworkStatus = "";
                         string_Network = "";
                         string_MacAddress = "";
-                        networkType = "";                       
-                    }
-                    else
-                    {                        
-                        string_Network = string_Network.Replace("(", "[").Replace(")", "]");
-                        break;
+                        networkType = "";
                     }
                 }
 
@@ -289,17 +291,17 @@ namespace Hw_Monitor
             }
 
             //Hardware Informationen
-            textBox_cpuInfo.Text = "Prozessor:  " + cpuName + "\n" + 
-                                    cpuLoadString + "\n" + 
-                                    "Prozessortemperatur:" +"\n" + 
-                                    cpuTempString;
-            textBox_ramInfo.Text = "Arbeitsspeicher:" +"\n" + 
-                                   "Total Memory:" + "\t\t" + totalMemory + " GB\n" + 
-                                    ramUsageString;
-            textBox_diskInfo.Text = "Festplatte: " + "\n" +
-                                    "Bezeichnung:\t\t" + diskInfoString + "\n" +
-                                    hddUsageString +
-                                    "Temperatur:\t\t" + diskTemperature +"°C";
+            textBox_cpuInfo.Text     = "Prozessor:  " + cpuName + "\n" + 
+                                        cpuLoadString + "\n" + 
+                                       "Prozessortemperatur:" +"\n" + 
+                                        cpuTempString;
+            textBox_ramInfo.Text     = "Arbeitsspeicher:" +"\n" + 
+                                       "Total Memory:" + "\t\t" + totalMemory + " GB\n" + 
+                                        ramUsageString;
+            textBox_diskInfo.Text    = "Festplatte: " + "\n" +
+                                       "Bezeichnung:\t\t" + diskInfoString + "\n" +
+                                        hddUsageString +
+                                       "Temperatur:\t\t" + diskTemperature +"°C";
             textBox_networkInfo.Text = "Netzwerkarte:" + "\t\t" + string_Network + "\n" +
                                        "Gesamtanzahl Daten:" + "\t" + network_Data.ToString() + " Bytes/s\n" +
                                        "Gesendete Daten:" + "\t\t" + networkDataSent.ToString() + " Bytes/s\n" +
@@ -356,14 +358,14 @@ namespace Hw_Monitor
         }
 
         public void everythingHidden() {
-            textBox_cpuInfo.Visibility = Visibility.Hidden;
-            textBox_ramInfo.Visibility = Visibility.Hidden;
-            textBox_diskInfo.Visibility = Visibility.Hidden;
-            textBox_networkInfo.Visibility = Visibility.Hidden;
-            Zed_cpu.Visibility = Visibility.Hidden;
-            Zed_ram.Visibility = Visibility.Hidden;
-            Zed_disk.Visibility = Visibility.Hidden;
-            Zed_network.Visibility = Visibility.Hidden;
+            textBox_cpuInfo.Visibility      = Visibility.Hidden;
+            textBox_ramInfo.Visibility      = Visibility.Hidden;
+            textBox_diskInfo.Visibility     = Visibility.Hidden;
+            textBox_networkInfo.Visibility  = Visibility.Hidden;
+            Zed_cpu.Visibility              = Visibility.Hidden;
+            Zed_ram.Visibility              = Visibility.Hidden;
+            Zed_disk.Visibility             = Visibility.Hidden;
+            Zed_network.Visibility          = Visibility.Hidden;
         }
 
         public void clearZed() {
