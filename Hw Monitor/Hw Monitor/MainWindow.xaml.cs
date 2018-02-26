@@ -44,7 +44,6 @@ namespace Hw_Monitor
         //Werte der Hardware Komponenten um den Zed Graph zeichnen zu können
         double ramUsage = 0.0, diskUsage = 0.0, cpuLoad = 0.0;
         int x_time = 0, network_Data = 0;
-        int roundingIP = 0, roundingNetworkCard = 0;
 
         //Hardware Informationen
         double totalMemory = 0;
@@ -225,7 +224,6 @@ namespace Hw_Monitor
                 foreach (IPAddress IP in Host.AddressList)
                 {
                     IPAddress += (IP.ToString());
-                    roundingIP++;
                     if (IsIP(IPAddress) == true)
                     {
                         break;
@@ -242,13 +240,10 @@ namespace Hw_Monitor
                         string_MacAddress    = networkItem.GetPhysicalAddress().ToString();
                         string_NetworkStatus = networkItem.OperationalStatus.ToString();
                         networkType          = networkItem.Name;
-                        roundingNetworkCard++;
-
-                    
 
                     if (networkType == "WLAN" && string_NetworkStatus == "Up" || networkType == "Ethernet" && string_NetworkStatus == "Up")
                     {
-                        string_Network = string_Network.Replace("(", "[").Replace(")", "]");
+                        string_Network = string_Network.Replace("(", "[").Replace(")", "]").Replace("/", "_");
                         break;
                     }
                     else
