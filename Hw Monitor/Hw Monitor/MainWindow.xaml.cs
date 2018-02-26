@@ -18,14 +18,18 @@ using System.Net.NetworkInformation;
 using OpenHardwareMonitor.Hardware;
 using ZedGraph;
 using System.Management;
+using System.Globalization;
+using System.Net;
 
 namespace Hw_Monitor
 {
-
     public partial class MainWindow : Window
     {
         Computer thisComputer = new Computer();
         DispatcherTimer timer = new DispatcherTimer();
+        CultureInfo ci = CultureInfo.CurrentCulture;
+        ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT totalphysicalmemory FROM Win32_ComputerSystem");
+        IPHostEntry Host = Dns.GetHostEntry(Dns.GetHostName());
 
         //PointPairList for ZedGraph
         PointPairList cpuLoadList = new PointPairList();
@@ -37,16 +41,18 @@ namespace Hw_Monitor
         PerformanceCounter network = new PerformanceCounter();      
         PerformanceCounter networkSent = new PerformanceCounter();
 
-        ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT totalphysicalmemory FROM Win32_ComputerSystem");
-
         //Werte der Hardware Komponenten um den Zed Graph zeichnen zu können
         double ramUsage = 0.0, diskUsage = 0.0, cpuLoad = 0.0;
         int x_time = 0, network_Data = 0;
+        int roundingIP = 0, roundingNetworkCard = 0;
 
         //Hardware Informationen
         double totalMemory = 0;
         int cpuTemperature = 0, diskTemperature = 0, networkDataSent = 0;
 
+        String language = "";
+        String userName = "";
+        String computerName = "";
 
         public MainWindow()
         {
@@ -88,6 +94,21 @@ namespace Hw_Monitor
             zedgraph_network.GraphPane.YAxis.Title.Text = "Gesamtanzahl Bytes/s";
             zedgraph_network.GraphPane.CurveList.Clear();
             networkList.Clear();
+
+            //Benutzername, Computername und Systemsprache ermitteln
+            userName = Environment.UserName;
+            computerName = Environment.MachineName;
+            language = ci.Name;
+
+            // Arbeitsspeichergröße ermitteln
+            ManagementObjectCollection res = searcher.Get();
+            foreach (ManagementObject mo in res)
+            {
+                totalMemory = long.Parse(mo["totalphysicalmemory"].ToString());
+            }
+            totalMemory = totalMemory / 1024 / 1024 / 1024;
+            totalMemory = Math.Round(totalMemory, 1);
+
         }
 
         private void button_click(object sender, RoutedEventArgs e)
@@ -129,26 +150,9 @@ namespace Hw_Monitor
             String diskInfoString = "";
             String string_NetworkStatus = "";
             String string_MacAddress = "";
-            String userName = "";
-            String computerName = "";
             String string_Network = "";
             String networkType = "";
-
-            //Benutzername und Computernamen ermitteln
-            userName = Environment.UserName;
-            computerName = Environment.MachineName;
-
-           // Arbeitsspeichergröße ermitteln
-            ManagementObjectCollection res = searcher.Get();
-
-            foreach (ManagementObject mo in res)
-            {
-                totalMemory = long.Parse(mo["totalphysicalmemory"].ToString());
-            }
-
-            totalMemory = totalMemory / 1024 / 1024 / 1024;
-            totalMemory = Math.Round(totalMemory, 1);
-
+            String IPAddress = "";
 
             //HardwareInformationen auslesen
             foreach (var hardwareItem in thisComputer.Hardware)
@@ -159,8 +163,8 @@ namespace Hw_Monitor
                     cpuName = hardwareItem.Name;
                     foreach (IHardware subHardware in hardwareItem.SubHardware)
                         subHardware.Update();
-                        foreach (var sensor in hardwareItem.Sensors)
-                        {
+                    foreach (var sensor in hardwareItem.Sensors)
+                    {
                         if (sensor.SensorType == SensorType.Temperature)
                         {
                             cpuTemperature = (int)sensor.Value.Value;
@@ -175,20 +179,21 @@ namespace Hw_Monitor
                         }
                     }
                 }
-                else if (hardwareItem.HardwareType == HardwareType.RAM) {
-                    hardwareItem.Update();                   
+                else if (hardwareItem.HardwareType == HardwareType.RAM)
+                {
+                    hardwareItem.Update();
                     foreach (IHardware subHardware in hardwareItem.SubHardware)
                         subHardware.Update();
 
                     foreach (var sensor in hardwareItem.Sensors)
-                    {    
+                    {
                         if (sensor.SensorType == SensorType.Data)
-                        {                            
+                        {
                             ramUsageString += String.Format("{0} Ram:\t{1} GB\r\n", sensor.Name, sensor.Value.HasValue ? Math.Round(sensor.Value.Value, 1).ToString() : "no value");
                         }
                         else if (sensor.SensorType == SensorType.Load)
                         {
-                            ramUsage = (double)sensor.Value.Value; 
+                            ramUsage = (double)sensor.Value.Value;
                         }
                     }
                 }
@@ -217,37 +222,70 @@ namespace Hw_Monitor
                     }
                 }
 
-                //Netzwerk Informationen
-                foreach (var networkItem in NetworkInterface.GetAllNetworkInterfaces())
+                foreach (IPAddress IP in Host.AddressList)
                 {
-                    string_Network = networkItem.Description.ToString();
-                    string_MacAddress = networkItem.GetPhysicalAddress().ToString();
-                    string_NetworkStatus = networkItem.OperationalStatus.ToString();
-                    networkType = networkItem.Name;
+                    IPAddress += (IP.ToString());
+                    roundingIP++;
+                    if (IsIP(IPAddress) == true)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        IPAddress = "";                      
+                    }
+                }
 
-                    if (networkType != "WLAN")
+                    foreach (var networkItem in NetworkInterface.GetAllNetworkInterfaces())
+                    {
+                        string_Network = networkItem.Description.ToString();
+                        string_MacAddress = networkItem.GetPhysicalAddress().ToString();
+                        string_NetworkStatus = networkItem.OperationalStatus.ToString();
+                        networkType = networkItem.Name;
+                        roundingNetworkCard++;
+
+                    if (roundingNetworkCard != roundingIP)
                     {
                         string_NetworkStatus = "";
                         string_Network = "";
                         string_MacAddress = "";
-                        networkType = "";
+                        networkType = "";                       
                     }
                     else
-                    {
+                    {                        
                         string_Network = string_Network.Replace("(", "[").Replace(")", "]");
                         break;
                     }
                 }
 
-                network.CategoryName = "Netzwerkschnittstelle";
-                network.CounterName = "Gesamtanzahl Bytes/s";
-                network.InstanceName = string_Network;
-                network_Data = (int)network.NextValue();
+                //Falls alle Netze down sind
+                if (IPAddress != "127.0.0.1")
+                {
+                    if (language == "de-DE")
+                    {
+                        network.CategoryName = "Netzwerkschnittstelle";
+                        network.CounterName = "Gesamtanzahl Bytes/s";
+                        network.InstanceName = string_Network;
+                        network_Data = (int)network.NextValue();
 
-                networkSent.CategoryName = "Netzwerkschnittstelle";
-                networkSent.CounterName = "Bytes gesendet/s";
-                networkSent.InstanceName = string_Network;
-                networkDataSent = (int)networkSent.NextValue();
+                        networkSent.CategoryName = "Netzwerkschnittstelle";
+                        networkSent.CounterName = "Bytes gesendet/s";
+                        networkSent.InstanceName = string_Network;
+                        networkDataSent = (int)networkSent.NextValue();
+                    }
+                    else if (language == "en-US")
+                    {
+                        network.CategoryName = "Network Interface";
+                        network.CounterName = "Bytes Total/sec";
+                        network.InstanceName = string_Network;
+                        network_Data = (int)network.NextValue();
+
+                        networkSent.CategoryName = "Network Interface";
+                        networkSent.CounterName = "Bytes sent/sec";
+                        networkSent.InstanceName = string_Network;
+                        networkDataSent = (int)networkSent.NextValue();
+                    }
+                }
             }
 
             //Hardware Informationen
@@ -263,14 +301,16 @@ namespace Hw_Monitor
                                     hddUsageString +
                                     "Temperatur:\t\t" + diskTemperature +"°C";
             textBox_networkInfo.Text = "Netzwerkarte:" + "\t\t" + string_Network + "\n" +
-                                       "Gesamtanzahl Daten:" + "\t" + network_Data.ToString() + " Bytes/s\n" +                                     
-                                       "Gesendete Daten:" + "\t\t" + networkDataSent.ToString() + " Bytes/s\n" + 
+                                       "Gesamtanzahl Daten:" + "\t" + network_Data.ToString() + " Bytes/s\n" +
+                                       "Gesendete Daten:" + "\t\t" + networkDataSent.ToString() + " Bytes/s\n" +
                                        "Netzwerkstatus:" + "\t\t" + string_NetworkStatus + "\n" +
-                                       "Mac-Adresse" + "\t\t" + string_MacAddress;
+                                       "Mac-Adresse:" + "\t\t" + string_MacAddress + "\n" + 
+                                       "IP-Adresse:" + "\t\t" + IPAddress;
 
             //Label Informationen übergeben
             LabelInfo.Content = "Benutzername: " + userName + "\n" +
-                                "Computer: " + computerName;
+                                "Computer: " + computerName + "\n" +
+                                "Systemsprache: " + language;
 
             //clear graph every 60 seconds
             clearZed();
@@ -364,6 +404,12 @@ namespace Hw_Monitor
             {
                 Button_cpu.Background = Brushes.White;
             }
+        }
+
+        //Prüft, ob es sich um eine IPv4-Adresse handelt
+        public bool IsIP(string IP)
+        {
+            return System.Text.RegularExpressions.Regex.IsMatch(IP, @"\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$\b");
         }
     }
 }
