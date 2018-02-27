@@ -29,7 +29,7 @@ namespace Hw_Monitor
     {
         Computer thisComputer             = new Computer();
         DispatcherTimer timer             = new DispatcherTimer();
-        CultureInfo ci                    = CultureInfo.CurrentCulture;
+        CultureInfo cultureinfo           = CultureInfo.CurrentCulture;
         ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT totalphysicalmemory FROM Win32_ComputerSystem");
         IPHostEntry Host                  = Dns.GetHostEntry(Dns.GetHostName());
 
@@ -39,15 +39,15 @@ namespace Hw_Monitor
         PointPairList diskUsageList = new PointPairList();
         PointPairList networkList   = new PointPairList();
 
-        //PerformanceCounter Netzwerkverkehr
+        //PerformanceCounter Networktraffic
         PerformanceCounter network     = new PerformanceCounter();      
         PerformanceCounter networkSent = new PerformanceCounter();
 
-        //Werte der Hardware Komponenten um den Zed Graph zeichnen zu können
+        //Values ​​of the hardware components
         double ramUsage = 0.0, diskUsage = 0.0, cpuLoad = 0.0;
         int x_time = 0, network_Data = 0;
 
-        //Hardware Informationen
+        //Hardware information
         double totalMemory = 0;
         int cpuTemperature = 0, diskTemperature = 0, networkDataSent = 0;
 
@@ -89,19 +89,19 @@ namespace Hw_Monitor
             zedgraph_disk.GraphPane.CurveList.Clear();
             diskUsageList.Clear();
 
-            //ZedGraph NetworkTraffic
+            //ZedGraph networktraffic
             zedgraph_network.GraphPane.Title.Text       = "Netzwerkverkehr";
             zedgraph_network.GraphPane.XAxis.Title.Text = "Zeit";
             zedgraph_network.GraphPane.YAxis.Title.Text = "Gesamtanzahl Bytes/s";
             zedgraph_network.GraphPane.CurveList.Clear();
             networkList.Clear();
 
-            //Benutzername, Computername und Systemsprache ermitteln
+            //determine the username, computername and system language
             userName     = Environment.UserName;
             computerName = Environment.MachineName;
-            language = ci.Name;
+            language = cultureinfo.Name;
 
-            // Arbeitsspeichergröße ermitteln
+            //determine from size of ram 
             ManagementObjectCollection res = searcher.Get();
             foreach (ManagementObject mo in res)
             {
@@ -155,7 +155,7 @@ namespace Hw_Monitor
             String networkType          = "";
             String IPAddress            = "";
 
-            //HardwareInformationen auslesen
+            //select the hardware information
             foreach (var hardwareItem in thisComputer.Hardware)
             {
                 if (hardwareItem.HardwareType == HardwareType.CPU)
@@ -245,49 +245,49 @@ namespace Hw_Monitor
 
                     if (networkType == "WLAN" && string_NetworkStatus == "Up" || networkType == "Ethernet" && string_NetworkStatus == "Up")
                     {
-                        string_Network = string_Network.Replace("(", "[").Replace(")", "]").Replace("/", "_");
+                        string_Network = string_Network.Replace("(", "[").Replace(")", "]").Replace("/", "_").Replace(@"\", "_").Replace("#", "_");
                         break;
                     }
                     else
                     {
                         string_NetworkStatus = "";
-                        string_Network = "";
-                        string_MacAddress = "";
-                        networkType = "";
+                        string_Network       = "";
+                        string_MacAddress    = "";
+                        networkType          = "";
                     }
                 }
 
-                //Falls alle Netze down sind
+                //If all network interfaces are down
                 if (IPAddress != "127.0.0.1")
                 {
                     if (language == "de-DE")
                     {
                         network.CategoryName = "Netzwerkschnittstelle";
-                        network.CounterName = "Gesamtanzahl Bytes/s";
+                        network.CounterName  = "Gesamtanzahl Bytes/s";
                         network.InstanceName = string_Network;
                         network_Data = (int)network.NextValue();
 
                         networkSent.CategoryName = "Netzwerkschnittstelle";
-                        networkSent.CounterName = "Bytes gesendet/s";
+                        networkSent.CounterName  = "Bytes gesendet/s";
                         networkSent.InstanceName = string_Network;
                         networkDataSent = (int)networkSent.NextValue();
                     }
                     else if (language == "en-US")
                     {
                         network.CategoryName = "Network Interface";
-                        network.CounterName = "Bytes Total/sec";
+                        network.CounterName  = "Bytes Total/sec";
                         network.InstanceName = string_Network;
                         network_Data = (int)network.NextValue();
 
                         networkSent.CategoryName = "Network Interface";
-                        networkSent.CounterName = "Bytes sent/sec";
+                        networkSent.CounterName  = "Bytes sent/sec";
                         networkSent.InstanceName = string_Network;
                         networkDataSent = (int)networkSent.NextValue();
                     }
                 }
             }
 
-            //Hardware Informationen
+            //Hardware information
             textBox_cpuInfo.Text     = "Prozessor:  " + cpuName + "\n" + 
                                         cpuLoadString + "\n" + 
                                        "Prozessortemperatur:" +"\n" + 
@@ -306,7 +306,7 @@ namespace Hw_Monitor
                                        "Mac-Adresse:" + "\t\t" + string_MacAddress + "\n" + 
                                        "IP-Adresse:" + "\t\t" + IPAddress;
 
-            //Label Informationen übergeben
+            //transfer the label information
             LabelInfo.Content = "Benutzername: " + userName + "\n" +
                                 "Computer: " + computerName + "\n" +
                                 "Systemsprache: " + language;
@@ -314,13 +314,13 @@ namespace Hw_Monitor
             //clear graph every 60 seconds
             clearZed();
 
-            //X und Y Werte List übergeben
+            //transfer X and Y values to list
             cpuLoadList.Add(x_time, cpuLoad);
             ramUsageList.Add(x_time, ramUsage);
             diskUsageList.Add(x_time, diskUsage);
             networkList.Add(x_time, network_Data);
 
-            //Graph zeichnen
+            //Draw a graph
             LineItem myCurve_cpu = zedgraph_cpu.GraphPane.AddCurve("", cpuLoadList, System.Drawing.Color.Blue, SymbolType.None);
             zedgraph_cpu.AxisChange();
             zedgraph_cpu.Refresh();
@@ -390,10 +390,10 @@ namespace Hw_Monitor
 
                 x_time = 0;
 
-                //Nach 60 sekunden werden die Daten in eine Xml Datei exportiert 
-                DateTime datetime = DateTime.Now;
+                //After 60 seconds, the data is exported to txt file
+                DateTime datetime  = DateTime.Now;
                 String information = "\nDatum: " + datetime.ToString() + "\n\n" + textBox_cpuInfo.Text + "\n" + textBox_ramInfo.Text + "\n" + textBox_diskInfo.Text + "\n" + textBox_networkInfo.Text;
-                saveXml(information, "Information.xml");
+                saveData(information, "Information.txt");
             }
             x_time++;
         }
@@ -410,15 +410,15 @@ namespace Hw_Monitor
             }
         }
 
-        //Prüft, ob es sich um eine IPv4-Adresse handelt
+        //Check, if is a Ipv4 address or not 
         public bool IsIP(string IP)
         {
             return System.Text.RegularExpressions.Regex.IsMatch(IP, @"\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$\b");
         }
 
-        public void saveXml(string text, string filename)
+        public void saveData(string text, string filename)
         {
-            XmlSerializer sr = new XmlSerializer(text.GetType());
+            XmlSerializer sr  = new XmlSerializer(text.GetType());
             TextWriter writer = new StreamWriter(filename);
             sr.Serialize(writer, text);
             writer.Close();
